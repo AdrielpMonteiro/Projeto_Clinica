@@ -1,7 +1,7 @@
 from base64 import encode
 
 import sqlite3
-import bcrypt ##USADO PARA SENHA SEGURA
+
 
 
 def conexao_db():
@@ -43,18 +43,9 @@ def criando_db():
                                
                            )
                        ''')
-        cursor.execute('''
-                           CREATE TABLE IF NOT EXISTS administradores (
-                               id INTEGER PRIMARY KEY AUTOINCREMENT,
-                               nome TEXT NOT NULL,
-                               senha TEXT NOT NULL,
-                               nascimento TEXT NOT NULL,
-                               email TEXT NOT NULL
-                              
-                           )
-                       ''')
+
         conexao.commit()
-        print("Tabelas 'usuarios' ,'profissionais , 'administradores',criadas com sucesso")
+        print("Tabelas 'usuarios' ,'profissionais ,criadas com sucesso")
         return conexao,cursor
     except sqlite3.Error as erro:
         print("Errou ao criar a tabela",erro)
@@ -67,8 +58,6 @@ def criando_db():
         print("Conexão encerrada ")
 
 def cadastrar_usuario(nome , senha ,nascimento ,email):
-    senha = senha.encode('utf-8')
-    senha_hash = bcrypt.hashpw(senha,bcrypt.gensalt())
     try:
         conexao ,cursor = conexao_db()
         if not conexao or not cursor:
@@ -76,7 +65,7 @@ def cadastrar_usuario(nome , senha ,nascimento ,email):
 
         cursor.execute('''
                      INSERT INTO usuarios (nome, senha, nascimento, email )
-                    VALUES (?, ?, ?, ? )  ''',(nome,senha_hash,nascimento ,email ))
+                    VALUES (?, ?, ?, ? )  ''',(nome,senha,nascimento ,email ))
 
         conexao.commit()
         return True
@@ -91,8 +80,6 @@ def cadastrar_usuario(nome , senha ,nascimento ,email):
 
 
 def cadastrar_profissional(nome, senha, email, crf, especialidade):
-    senha = senha.encode('utf-8')
-    senha_hash = bcrypt.hashpw(senha, bcrypt.gensalt())
     try:
         conexao, cursor = conexao_db()
         if not conexao or not cursor:
@@ -100,7 +87,7 @@ def cadastrar_profissional(nome, senha, email, crf, especialidade):
 
         cursor.execute('''
                     INSERT INTO profissionais (nome,senha,crf,email,especialidade)
-                    VALUES (?, ?, ?, ?, ?)  ''', (nome, senha_hash, crf, email, especialidade))
+                    VALUES (?, ?, ?, ?, ?)  ''', (nome, senha, crf, email, especialidade))
 
         conexao.commit()
         return True
@@ -124,10 +111,11 @@ def verificar_login(nome,senha):
         resultado = cursor.fetchone()
 
         if resultado:
-            senha_hash = resultado[0]
-            senha_hash = senha_hash.encode('utf-8')
+            senha_db = resultado[0]
 
-            if bcrypt.checkpw(senha.encode('utf-8'),senha_hash):
+
+            if senha == senha_db:
+                print("Senha ferificada com sucesso")
                 return True
 
         return False
@@ -139,6 +127,27 @@ def verificar_login(nome,senha):
             cursor.close()
         if conexao:
             conexao.close()
+
+
+def deletar_usuario(id_usuario):
+    try:
+        conexao, cursor = conexao_db()
+        if not conexao or not cursor:
+            return False
+
+        cursor.execute('DELETE FROM usuarios WHERE id = ?', (id_usuario,))
+        conexao.commit()
+        print(f"Usuário com ID {id_usuario} deletado com sucesso!")
+        return True
+    except sqlite3.Error as erro:
+        print("Erro ao deletar usuário", erro)
+        return False
+    finally:
+        if cursor:
+            cursor.close()
+        if conexao:
+            conexao.close()
+
 
 criando_db()
 

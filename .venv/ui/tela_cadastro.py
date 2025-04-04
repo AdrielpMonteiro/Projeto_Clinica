@@ -42,7 +42,7 @@ def tela_cadastro(root):
             ctk.CTkLabel(frame, text="Erro ao cadastrar", text_color="red").pack(pady=10)
 
     # Botões
-    button_cadastrar = ctk.CTkButton(frame, text="Cadastrar", width=200, height=40, command=cadastrar())
+    button_cadastrar = ctk.CTkButton(frame, text="Cadastrar", width=200, height=40, command=cadastrar)
     button_cadastrar.pack(pady=10)
     button_voltar = ctk.CTkButton(frame, text="Voltar", width=200, height=40, command=lambda: tela_login(root))
     button_voltar.pack(pady=10)
