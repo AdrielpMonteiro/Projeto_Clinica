@@ -3,6 +3,7 @@ import tkinter as tk
 from ui.tela_login import verificar_login
 import tkinter.ttk as ttk
 from banco_dados import listar_usuario
+from banco_dados import deletar_usuario
 
 
 def tela_agendamento(root,nome):
@@ -46,9 +47,22 @@ def tela_agendamento(root,nome):
     for usuario in usuarios:
         tabela_usuarios.insert("", "end", values=usuario)
 
+    def deletar_usuario_selecionado():
+        item_selecionado = tabela_usuarios.selection()
+        if not item_selecionado:
+            ctk.messagebox.showwarning("Aviso", "Selecione um usuário para deletar!")
+            return
+        
+        id_usuario = tabela_usuarios.item(item_selecionado[0])['values'][0]
+        if deletar_usuario(id_usuario):
+            tabela_usuarios.delete(item_selecionado[0])
+            ctk.messagebox.showinfo("Sucesso", "Usuário deletado com sucesso!")
+        else:
+            ctk.messagebox.showerror("Erro", "Erro ao deletar usuário!")
+
     button_voltar = ctk.CTkButton(frame, text="Voltar", width=200, height=40, command=lambda: tela_login(root))
     button_voltar.pack(pady=10)
-    button_Delete = ctk.CTkButton(frame,text="Delete usuário",width=200,height=40)
+    button_Delete = ctk.CTkButton(frame,text="Delete usuário",width=200,height=40,command=deletar_usuario_selecionado)
     button_Delete.pack(pady=10)
 
 
