@@ -2,6 +2,9 @@ import customtkinter as ctk
 from ui.tela_cadastro import tela_cadastro
 from banco_dados import verificar_login
 from ui.tela_agendamento import tela_agendamento
+from PIL import Image
+import os
+import sys
 
 def tela_login(root):
     root.configure(bg="black")

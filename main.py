@@ -1,8 +1,9 @@
 import tkinter as tk
 import customtkinter as ctk
 from ui.tela_login import tela_login
-from ui.tela_cadastro import tela_cadastro
-import pytest
+from PIL import Image
+import os
+
 
 def main():
     root = ctk.CTk()

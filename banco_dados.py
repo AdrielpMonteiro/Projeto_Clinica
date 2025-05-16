@@ -167,6 +167,29 @@ def listar_usuario():
         if conexao:
             conexao.close()
 
+def atualizar_usuario(id_usuario, nome, email, nascimento):
+    try:
+        conexao, cursor = conexao_db()
+        if not conexao or not cursor:
+            return False
+
+        cursor.execute('''
+            UPDATE usuarios
+            SET nome = ?, email = ?, nascimento = ?
+            WHERE id = ?
+        ''', (nome, email, nascimento, id_usuario))
+
+        conexao.commit()
+        print(f"Usuário com ID {id_usuario} atualizado com sucesso!")
+        return True
+    except sqlite3.Error as erro:
+        print("Erro ao atualizar usuário", erro)
+        return False
+    finally:
+        if cursor:
+            cursor.close()
+        if conexao:
+            conexao.close()
 
 
 

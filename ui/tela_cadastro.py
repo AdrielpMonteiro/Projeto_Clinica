@@ -2,17 +2,22 @@ import customtkinter as ctk
 from banco_dados import cadastrar_usuario
 import datetime
 import re
+from PIL import Image
+import os
+
 
 
 
 def tela_cadastro(root):
     root.configure(bg="black")
 
+
     frame = ctk.CTkFrame(root, fg_color="transparent")
     frame.pack(expand=True, fill="both", padx=20, pady=20)
 
     label = ctk.CTkLabel(frame, text="Cadastro", font=("Arial", 24, "bold"), text_color="white")
     label.pack(pady=20)
+
 
 
     entry_usuario = ctk.CTkEntry(frame, placeholder_text="Usuário", width=300, height=40)
